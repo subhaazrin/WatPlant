@@ -99,10 +99,23 @@ HAL_ADC_Start(&hadc1);
   {
 	  HAL_ADC_PollForConversion(&hadc1,1000);
 	  readValue = HAL_ADC_GetValue(&hadc1);
-	  if(readValue > 600){
-	  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, 1);//red turn on
-
-  }
+	  if(readValue > 2300){
+		  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, 1);//red turn on
+		  HAL_Delay(500);
+		  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, 0);
+		  HAL_Delay(500);
+		  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, 1);//red turn on
+		  HAL_Delay(500);
+		  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, 0);
+		  HAL_Delay(1000);
+	  } else if(readValue>1200){
+		  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, 1);
+	  }else{
+		  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, 1);//red turn on
+		  HAL_Delay(500);
+		  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, 0);
+		  HAL_Delay(1000);
+	  }
   }
 	  /*
     /* USER CODE END WHILE */
@@ -226,7 +239,7 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1|GPIO_PIN_3|LD2_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1|GPIO_PIN_4|LD2_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin : B1_Pin */
   GPIO_InitStruct.Pin = B1_Pin;
@@ -234,8 +247,8 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(B1_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : PA1 PA3 LD2_Pin */
-  GPIO_InitStruct.Pin = GPIO_PIN_1|GPIO_PIN_3|LD2_Pin;
+  /*Configure GPIO pins : PA1 PA4 LD2_Pin */
+  GPIO_InitStruct.Pin = GPIO_PIN_1|GPIO_PIN_4|LD2_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
