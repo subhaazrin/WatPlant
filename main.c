@@ -18,11 +18,12 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include <stdio.h>
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include <stdio.h>
 uint16_t readValue;
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -96,38 +97,18 @@ HAL_ADC_Start(&hadc1);
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    /* USER CODE END WHILE */
-	  int count = 0;
-	  int total = 0;
+	  HAL_ADC_PollForConversion(&hadc1,1000);
+	  readValue = HAL_ADC_GetValue(&hadc1);
+	  if(readValue > 600){
+	  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, 1);//red turn on
 
-	  while (count<100){
-		  HAL_ADC_PollForConversion(&hadc1,1000);
-		  readValue = HAL_ADC_GetValue(&hadc1);
-		  total+=readValue;
-		  ++count;
-	  }
-	  	  total/=100;
-
-	  	  if(0<=total<=100){//no soil
-	  		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, 1);//red turn on
-	  		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_3, 0);
-	  	  } else if(total<=250){//soil with little water
-	  		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, 1);//red turn on
-	  		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_3, 0);
-	  	  } else if(total<=350){//soil with enough water
-	  		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, 0);
-	  		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_3, 1);//green turn on
-	  		HAL_Delay(10000);
-	  	  } else{//soil with too much water
-	  		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, 1);//red turn on
-	  		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_3, 1);//green turn on
-	  		HAL_Delay(10000);
-	  	  }
-
-		  //printf("%d",readValue);
-		  //HAL_GPIO_WritePin(GPIOA, GPIO_PIN_3, 1);
-    /* USER CODE BEGIN 3 */
   }
+  }
+	  /*
+    /* USER CODE END WHILE */
+
+    /* USER CODE BEGIN 3 */
+ // }
   /* USER CODE END 3 */
 }
 
@@ -216,7 +197,7 @@ static void MX_ADC1_Init(void)
 
   /** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time.
   */
-  sConfig.Channel = ADC_CHANNEL_9;
+  sConfig.Channel = ADC_CHANNEL_0;
   sConfig.Rank = 1;
   sConfig.SamplingTime = ADC_SAMPLETIME_3CYCLES;
   if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
